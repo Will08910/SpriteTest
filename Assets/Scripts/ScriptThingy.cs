@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class ScriptThingy : MonoBehaviour
 {
+    HelperScript helper;
     public Animator anim;
     private float Move;
     public int speed = 10;
@@ -16,21 +17,26 @@ public class ScriptThingy : MonoBehaviour
     public Transform player;
     private Vector3 offset = new Vector3(0,10,-10);
     public GameObject Camera1;
+    public GameObject Camera2;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        helper = gameObject.AddComponent<HelperScript>();
     }
 
 
         // Update is called once per frame
         void Update()
         {
-        MoveSprite();
-        Camera1.transform.position = player.position + offset;
-    }
+            MoveSprite();
+            Camera1.transform.position = player.position + offset;
+            Camera2.transform.position = player.position + offset;
+
+            helper.SayTheThing();    // this will execute the method in HelperScript.cs
+        }
     
 
     void MoveSprite()
@@ -55,6 +61,7 @@ public class ScriptThingy : MonoBehaviour
         {
             rb.AddForce(new Vector3(0, 15, 0), ForceMode2D.Impulse);
         }
+
 
         if (Move >= 0.1f  || Move <= -0.1f)
         {
