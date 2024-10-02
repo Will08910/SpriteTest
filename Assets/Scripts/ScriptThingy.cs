@@ -18,6 +18,7 @@ public class ScriptThingy : MonoBehaviour
     private Vector3 offset = new Vector3(0,10,-10);
     public GameObject Camera1;
     public GameObject Camera2;
+    public GameObject Camera3;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,8 +35,9 @@ public class ScriptThingy : MonoBehaviour
             MoveSprite();
             Camera1.transform.position = player.position + offset;
             Camera2.transform.position = player.position + offset;
+            Camera3.transform.position = player.position + offset;
 
-            helper.SayTheThing();    // this will execute the method in HelperScript.cs
+        helper.SayTheThing();    // this will execute the method in HelperScript.cs
         }
     
 
