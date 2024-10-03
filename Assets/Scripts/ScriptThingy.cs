@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class ScriptThingy : MonoBehaviour
 {
+    LayerMask groundLayerMask;
     HelperScript helper;
     public Animator anim;
     private float Move;
@@ -19,6 +20,7 @@ public class ScriptThingy : MonoBehaviour
     public GameObject Camera1;
     public GameObject Camera2;
     public GameObject Camera3;
+    private bool isGrounded;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,12 +28,14 @@ public class ScriptThingy : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         helper = gameObject.AddComponent<HelperScript>();
+        groundLayerMask = LayerMask.GetMask("Ground");
     }
 
 
         // Update is called once per frame
         void Update()
         {
+            DoRayCollisionCheck();
             MoveSprite();
             Camera1.transform.position = player.position + offset;
             Camera2.transform.position = player.position + offset;
@@ -59,9 +63,9 @@ public class ScriptThingy : MonoBehaviour
             sr.flipX = false;
         }
 
-        if (Input.GetKeyDown("space") && anim.GetBool("isJumping") == false)
+        if (Input.GetKeyDown("space") && isGrounded == true)
         {
-            rb.AddForce(new Vector3(0, 15, 0), ForceMode2D.Impulse);
+            rb.AddForce(new Vector3(0, 21, 0), ForceMode2D.Impulse);
         }
 
 
@@ -75,20 +79,26 @@ public class ScriptThingy : MonoBehaviour
         }
 
     }
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.gameObject.CompareTag("Ground"))
-        {
-            anim.SetBool("isJumping", false);
-        }
-    }
 
-    private void OnCollisionExit2D(Collision2D other)
+    public void DoRayCollisionCheck()
     {
-        if (other.gameObject.CompareTag("Ground"))
+        float rayLength = 0.5f;
+
+        RaycastHit2D hit;
+
+        hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength, groundLayerMask);
+
+        Color hitColor = Color.white;
+        isGrounded = false;
+
+        if (hit.collider != null)
         {
-            anim.SetBool("isJumping", true);
+            print("Player has collided with Ground layer");
+            hitColor = Color.green;
+            isGrounded = true;
         }
+        Debug.DrawRay(transform.position, Vector2.down * rayLength, hitColor);
+        
     }
 
 }
